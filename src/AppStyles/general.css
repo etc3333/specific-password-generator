@@ -1,0 +1,63 @@
+.format {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: 100vh;
+}
+
+.center-box {
+    border: double;
+    padding: 20px 20px 20px 20px;
+    border-radius: 10px;
+    background: linear-gradient(60deg, rgb(33, 199, 199), rgb(7, 236, 7));
+    width: 500px;
+}
+
+#password-gen {
+    background-color: rgb(14, 189, 23);
+    display: inline-block;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    font-style: italic;
+    font-size: larger;
+    min-width: 100px;
+    min-height: 30px;
+}
+
+.center-box header {
+    font-weight: bold;
+    font-size: 150%;
+    padding-bottom: 15px;
+}
+
+#password-variables {
+    text-align: left;
+}
+
+#password-variables div {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    font-size: larger;
+}
+
+#password-variables input {
+    float: right;
+}
+
+#length {
+    width: 20%;
+    margin-right: 20px;
+    text-align: center;
+    font-style: italic;
+}
+
+#num, #upCa, #loCa, #spCh {
+    width: 20%;
+    text-align: center;
+    font-style: italic;
+}
+
+.password-button {
+    margin-top: 25px;
+}
