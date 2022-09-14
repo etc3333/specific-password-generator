@@ -2,9 +2,6 @@ import { useCallback, useState } from "react";
 import React from "react";
 import "./AppStyles/general.css"
 import { upperCase, lowerCase, numbers, specialChars } from "./Characters.js";
-//import CreateTextBox from "./CreateTextBox";
-
-
 
 function App() {
 
@@ -13,6 +10,7 @@ function App() {
   const [useLowerCase, setUseLowerCase] = useState(false);
   const [useNumbers, setUseNumbers] = useState(false);
   const [useSpecialChars, setUseSpecialChars] = useState(false);  
+
 
   function getValues() {
     let length, upper, lower, number, special;
@@ -44,7 +42,13 @@ function App() {
     const errorNoLength = "Error: Must include password length!";
     const errorExceedLength = "Error: Variable occurences exceed length of password! Either increase password length or reduce variable occurences!";
     const errorExceedMaxLength = "Error: Password length exceeds maximum allowed!";
+    const errorNoUsesSelected = "Error: No Uses Selected!";
     let total = 0;
+
+    if (useUpperCase === false && useLowerCase === false && useNumbers === false && useSpecialChars === false) {
+      alert(errorNoUsesSelected);
+      return false;
+    }
 
     //no password length check
     if (isNaN(values.passLength)) {
@@ -182,7 +186,7 @@ function App() {
     if (props.condition === false) {
       return null;
     }
-    return <input type="text" id={props.id} placeholder="Mininum #"></input>
+    return <input type="text" id={props.id} placeholder="Min. #"></input>
   },[]);  
 
   function setCheckBox(e, setter) {
