@@ -3,6 +3,10 @@ import React from "react";
 import "./AppStyles/general.css"
 import { upperCase, lowerCase, numbers, specialChars } from "./Characters.js";
 
+import { getValues } from "./functions/getValues.js";
+import { validationCheck } from "./functions/validationCheck.js";
+import { shufflePassword } from "./functions/shufflePassword.js";
+
 function App() {
 
   const [password, setPassword] = useState("");
@@ -11,130 +15,21 @@ function App() {
   const [useNumbers, setUseNumbers] = useState(false);
   const [useSpecialChars, setUseSpecialChars] = useState(false);  
 
-
-  function getValues() {
-    let length, upper, lower, number, special;
-
-    //get variable values and turn into numbers
-    length = parseInt(document.getElementById("length").value);
-    if (useUpperCase) {
-      upper = parseInt(document.getElementById("upCa").value);
-    }
-    if (useLowerCase) {
-      lower = parseInt(document.getElementById("loCa").value);
-    }
-    if (useNumbers) {
-      number = parseInt(document.getElementById("num").value);
-    }
-    if(useSpecialChars) {
-      special = parseInt(document.getElementById("spCh").value);
-    }
-    
-    //make object with values
-    const values = {passLength:length, upperValue:upper, lowerValue:lower, numValue:number, specialValue:special};
-    
-    return values;
-  }
-
-  function validationCheck() {
-    const values = getValues();
-    const errorVariables = "Error: One ore more variables have non-numeric value";
-    const errorNoLength = "Error: Must include password length!";
-    const errorExceedLength = "Error: Variable occurences exceed length of password! Either increase password length or reduce variable occurences!";
-    const errorExceedMaxLength = "Error: Password length exceeds maximum allowed!";
-    const errorNoUsesSelected = "Error: No Uses Selected!";
-    let total = 0;
-
-    if (useUpperCase === false && useLowerCase === false && useNumbers === false && useSpecialChars === false) {
-      alert(errorNoUsesSelected);
-      return false;
-    }
-
-    //no password length check
-    if (isNaN(values.passLength)) {
-      alert(errorNoLength);
-      return false;
-    }
-
-    //max password length check
-    if (values.passLength > 40) {
-      alert(errorExceedMaxLength);
-      return false;
-    }
-
-    //check for non-numeric values/ empty values
-    if (useUpperCase) {
-      if (isNaN(values.upperValue)) {
-        alert(errorVariables);
-        return false;
-      }
-      total += values.upperValue;
-    }
-    if (useLowerCase) {
-      if (isNaN(values.lowerValue)) {
-        alert(errorVariables);
-        return false;
-      }
-      total += values.lowerValue;
-    }
-    if (useNumbers) {
-      if (isNaN(values.numValue)) {
-        alert(errorVariables);
-        return false;
-      }
-      total += values.numValue;
-    }
-    if(useSpecialChars) {
-      if (isNaN(values.specialValue)) {
-        alert(errorVariables);
-        return false;
-      }
-      total += values.specialValue;
-    }
-
-    if (total > values.passLength) {
-      alert(errorExceedLength);
-      return false;
-    }
-    return true;
-  }
-
-  function shufflePassword(pwd) {
-    let i = 0;
-    let a;
-    let b;
-    let temp;
-    pwd = pwd.split("");  //make string into array
-
-    while (i < pwd.length) {
-      
-      a = Math.floor(Math.random() * pwd.length);
-      b = Math.floor(Math.random() * pwd.length);
-      
-      temp = pwd[a];
-      pwd[a] = pwd[b];
-      pwd[b] = temp;
-      
-      i++;
-    }
-    pwd = pwd.join(""); //make array into string with no commas
-    setPassword(pwd);
-  }
-
   function generatePassword() {
+    const values = getValues(useUpperCase, useLowerCase, useNumbers, useSpecialChars);
 
-    const values = getValues();
-
-    if (validationCheck() === false) {
+    if (validationCheck(useUpperCase, useLowerCase, useNumbers, useSpecialChars) === false) {
       return;
     }
 
+    let combination = '';
     let pwd = "";
     let i;
 
     //find the variable in each category
     if (useUpperCase) {
       i = 0;
+      combination += upperCase;
       while (i < values.upperValue) {
         pwd += upperCase[Math.floor(Math.random() * (upperCase.length))];
         i++;
@@ -142,6 +37,7 @@ function App() {
     }
     if (useLowerCase) {
       i = 0;
+      combination += lowerCase;
       while (i < values.lowerValue) {
         pwd += lowerCase[Math.floor(Math.random() * (lowerCase.length))];
         i++;
@@ -149,6 +45,7 @@ function App() {
     }
     if (useNumbers) {
       i = 0;
+      combination += numbers;
       while (i < values.numValue) {
         pwd += numbers[Math.floor(Math.random() * (numbers.length))];
         i++;
@@ -156,6 +53,7 @@ function App() {
     }
     if (useSpecialChars) {
       i = 0;
+      combination += specialChars;
       while (i < values.specialValue) {
         pwd += specialChars[Math.floor(Math.random() * (specialChars.length))];
         i++;
@@ -164,7 +62,6 @@ function App() {
 
     //make up for lack of occurences in combined categories to match password length
     if (pwd.length < values.passLength) {
-      let combination = upperCase + lowerCase + numbers + specialChars;
       i = 0;
       let initialPwdlength = pwd.length;
       while (i < (values.passLength - initialPwdlength)) {
@@ -174,11 +71,11 @@ function App() {
     }
     
     
-    shufflePassword(pwd);
+    shufflePassword(pwd, setPassword);
 
     document.getElementById("password-gen").style.fontStyle = "normal"; //change italic to normal font
   }
-  
+
   const CreateTextBox = useCallback((props) => {
     //usecallback to prevent rerendering of boxes when their props don't change
 
@@ -186,7 +83,7 @@ function App() {
     if (props.condition === false) {
       return null;
     }
-    return <input type="text" id={props.id} placeholder="Min. #"></input>
+    return <input type="number" id={props.id} autoComplete="off" placeholder="Min. #"></input>
   },[]);  
 
   function setCheckBox(e, setter) {
@@ -200,15 +97,17 @@ function App() {
           Specific Random Password Generator
         </header>
         <div id="password-gen">
-          {password}
+          <div id="password-container">
+            {password}
+          </div>
         </div>
         <div>
-          <button onClick={() => shufflePassword(password)}>Shuffle Password</button>
+          <button onClick={() => shufflePassword(password, setPassword)}>Shuffle Password</button>
         </div>
         <div id="password-variables">
           <div>
             Password Length
-            <input type="text" id="length" placeholder="Max: 40"></input>
+            <input type="number" id="length" autoComplete="off" placeholder="Max: 40"></input>
           </div>
           <div id= "numbersVariable">
             Use Numbers
@@ -232,7 +131,7 @@ function App() {
           </div>
         </div>
         <div>
-         <button className="password-button" onClick={() => generatePassword()}>Generate Password</button>
+         <button className="password-button" onClick={() => generatePassword(setPassword, useUpperCase, useLowerCase, useNumbers, useSpecialChars)}>Generate Password</button>
         </div>
       </div>
     </div>
