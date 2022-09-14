@@ -1,4 +1,4 @@
-function getValues(useUpperCase, useLowerCase, useNumbers, useSpecialChars) {
+export function getValues(useUpperCase, useLowerCase, useNumbers, useSpecialChars) {
     let length, upper, lower, number, special;
 
     //get variable values and turn into numbers
