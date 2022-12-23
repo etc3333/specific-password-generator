@@ -1,6 +1,6 @@
 <b>Title</b>: Specific Calculator Generator
 
-<b>Framework</b>: REACT
+<b>Front-End</b>: REACT
 
 <b>Description</b>: 
 > Can choose type of variables and the amount of variables in the password generator.
