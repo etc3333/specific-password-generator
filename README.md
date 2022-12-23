@@ -1,10 +1,10 @@
 Framework: REACT
 
 Description: 
-    Specific Calculator Generator
-    Can choose type of variables and the amount of variables in the password generator.
-    Shuffle generated password feature avaiable.
+> Specific Calculator Generator <br />
+> Can choose type of variables and the amount of variables in the password generator. <br />
+> Shuffle generated password feature avaiable. <br />
 
 Future Improvements:
-    Graident Update
-    Add easy copy function for UX
+> Graident Update <br />
+> Add easy copy function for UX <br />
