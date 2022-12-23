@@ -3,9 +3,9 @@
 <b>Front-End</b>: REACT
 
 <b>Description</b>: 
-> Can choose type of variables and the amount of variables in the password generator.
-> Shuffle generated password feature avaiable.
+> Can choose type of variables and the amount of variables in the password generator. <br>
+> Shuffle generated password feature avaiable. <br>
 
 <b>Future Improvements</b>:
-> Graident Update 
-> Add easy copy function for UX 
+> Graident Update  <br>
+> Add easy copy function for UX  <br>
